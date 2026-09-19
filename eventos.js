@@ -1,5 +1,5 @@
 // BASE DE DATOS DE EVENTOS (real). Editá este archivo para sumar, corregir o borrar programas.
-// Cada evento es un bloque { ... }. Las imágenes van en la carpeta flyers/ y se citan como "flyers/nombre.jpg".
+// Cada evento es un bloque { ... }. Las imágenes van en la misma carpeta que index.html y se citan como "nombre.jpg".
 window.PD_EVENTS = [
   {
     "id": "eco-armonic-volver-2026-09-19",
@@ -43,7 +43,7 @@ window.PD_EVENTS = [
     "descripcion": "Onceavo Encuentro de Filosofía a la Carta, edición aniversario. DJs de 19 a 21 hs, charla de 21 a 23 hs con Mauricio Vera, Aaron Marco, Unai Rivas Campo y Fran Cus, y DJs hasta la 1. Cupos limitados: reservá tu copa en Ágora.",
     "link": "https://agora.red/brucewine/eventos/onceavo-encuentro-de-filosofia-a-la-carta",
     "organizador": "Bruce Wine",
-    "flyer": "flyers/filosofia-a-la-carta.jpg",
+    "flyer": "filosofia-a-la-carta.jpg",
     "origen": "chat"
   },
   {
@@ -58,7 +58,7 @@ window.PD_EVENTS = [
     "descripcion": "Primera edición de una fiesta de música balcánica y sonidos de Europa del Este: DJ set, visuales, ambientación, intervenciones y sorpresas, de 20 a 00 hs. Cupos limitados, entradas anticipadas a precio de lanzamiento. Tu entrada es tu visa.",
     "link": "https://dobro-disco.com.ar/",
     "organizador": "Dobro Disco",
-    "flyer": "flyers/dobro-disco.jpg",
+    "flyer": "dobro-disco.jpg",
     "origen": "chat"
   },
   {
@@ -73,7 +73,7 @@ window.PD_EVENTS = [
     "descripcion": "Grace & Badlove presentan Fractions, su tercer disco de estudio, en vivo: del funky disco al soul y un bolero. De 20 a 23:30 hs, capacidad limitada. Código de descuento que compartió la banda en el grupo: LIVESESSIONS-50%OFF.",
     "link": "https://www.passline.com/eventos/fractions-x-grace-badlove",
     "organizador": "The Lift",
-    "flyer": "flyers/fractions-grace-badlove.jpg",
+    "flyer": "fractions-grace-badlove.jpg",
     "origen": "chat"
   },
   {
@@ -88,7 +88,7 @@ window.PD_EVENTS = [
     "descripcion": "El Remolón y Brawlio vuelven a tocar en Buenos Aires después de su gira europea, con La Sacer en la música y visuales de Logicanalogica. Show + fiesta, de 22 a 02 hs. Anticipada promocional $8.000, general $10.000.",
     "link": "https://www.passline.com/eventos/199-el-remolon-brawlio-la-sacer-vj-logicaanalogica-show-fiesta-fertil-discos",
     "organizador": "Lalalá y Fértil Discos",
-    "flyer": "flyers/el-remolon-brawlio.jpg",
+    "flyer": "el-remolon-brawlio.jpg",
     "origen": "chat"
   },
   {
@@ -103,7 +103,7 @@ window.PD_EVENTS = [
     "descripcion": "Propuesta de Audioholics para que chicos y chicas descubran la música electrónica en familia: workshops de DJing y producción, experiencias de arte y tecnología y una fiesta con line-up de niños y niñas. Los menores ingresan siempre con un adulto responsable.",
     "link": "https://www.ondadirect.com/es/event/audiokidz",
     "organizador": "Audioholics y Dune Park",
-    "flyer": "flyers/audiokidz.jpg",
+    "flyer": "audiokidz.jpg",
     "origen": "chat"
   },
   {
@@ -133,7 +133,7 @@ window.PD_EVENTS = [
     "descripcion": "Una selección de todo lo que nos gusta, en la terraza de Casa: ropa, accesorios, arte, tragos, café, música, tattoos y amigos al solcito. De 15 a 19 hs. Con la entrada, 2x1 en vermú.",
     "link": "https://enter.ar/eventos/casa-kumo-the-gallery-2",
     "organizador": "Casa Kumo",
-    "flyer": "flyers/casa-kumo-the-gallery.jpg",
+    "flyer": "casa-kumo-the-gallery.jpg",
     "origen": "chat"
   },
   {
@@ -148,7 +148,7 @@ window.PD_EVENTS = [
     "descripcion": "Evento autogestionado por la comunidad para recaudar fondos y llevar el arte de Buenos Aires a Fuego Austral 2027. Juegos, intervenciones artísticas, música de la comunidad, comida y bebida. De 18 a 03 hs, puerta hasta las 23. Bono Hocus Pocus $15.000 (en puerta $20.000).",
     "link": "https://eventos.fuegoaustral.org/",
     "organizador": "Fuego Austral",
-    "flyer": "flyers/arte-activa.jpg",
+    "flyer": "arte-activa.jpg",
     "origen": "chat"
   },
   {
@@ -163,7 +163,7 @@ window.PD_EVENTS = [
     "descripcion": "Con Danny Tenaglia, Lee Burridge, Chris Schwarzwälder y Mandrake. Capacidad limitada, solo mayores de 18. Máximo 4 tickets por persona; al ingresar piden el QR de Enigma y DNI.",
     "link": "https://www.enigmatickets.com/event/e4f5683d-7f06-44b0-a398-de8418d5e359",
     "organizador": "Buena Productora",
-    "flyer": "flyers/corona-sunsets.jpg",
+    "flyer": "corona-sunsets.jpg",
     "origen": "chat"
   },
   {
