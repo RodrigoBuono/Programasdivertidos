@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Programas Divertidos · Planes en CABA y GBA</title>
+<meta name="description" content="El calendario compartido de planes de CABA y alrededores. Mirá qué hay y cargá el tuyo con tu flyer.">
+<meta property="og:title" content="Programas Divertidos">
+<meta property="og:description" content="El calendario compartido de planes de CABA y alrededores. Mirá qué hay y cargá el tuyo.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2228%22 fill=%22%236f34ff%22/><text x=%2250%22 y=%2270%22 font-size=%2260%22 text-anchor=%22middle%22>🎉</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- ============================================================
+     CONEXIÓN CON GOOGLE (ya configurada): esta es la URL de la planilla
+     que hace de base de datos. Si algún día la cambiás, pegá acá la
+     nueva (termina en /exec). Si la dejás vacía, la web vuelve a leer
+     eventos.js y lo que cargue cada persona queda solo en su navegador.
+     ============================================================ -->
+<script>
+  window.PD_CONFIG = {
+    API_URL: "https://script.google.com/macros/s/AKfycbxoHJGozVTDmzwVyn86CFzdM9cTW5BRCf-qGuG4ie6MHdQ2xaHQefwyWU1uFIvzrj1r1A/exec"
+  };
+</script>
+
+<!-- Base de datos de eventos (editá eventos.js para sumar o corregir programas) -->
+<script src="eventos.js"></script>
+
+<style>
+  :root{
+    color-scheme:dark;
+    --black:#000;
+    --night:#07040f;
+    --deep:#1a0e3f;
+    --violet:#6f34ff;
+    --lilac:#d7d4ff;
+    --mint:#a8f0e0;
+    --rose:#ff8fb1;
+    --mut:#a49ed3;
+    --line:rgba(215,212,255,.16);
+    --glass:rgba(255,255,255,.045);
+    --display:'Bricolage Grotesque','Plus Jakarta Sans',system-ui,sans-serif;
+    --body:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; overflow-x:hidden; background:var(--black); color:var(--lilac);
+    font-family:var(--body); font-size:16px; line-height:1.5;
+  }
+  /* Fondo: negro que se hunde en violeta + un poco de grano de flyer impreso */
+  body::before{
+    content:""; position:fixed; inset:0; z-index:-2;
+    background:
+      radial-gradient(70% 42% at 50% 0%, rgba(111,52,255,.34), transparent 72%),
+      linear-gradient(180deg,#000 0%,var(--night) 46%,var(--deep) 100%);
+  }
+  body::after{
+    content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.07;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  button,input,select,textarea{font:inherit; color:inherit}
+  :focus-visible{outline:2px solid var(--mint); outline-offset:3px}
+  .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+  /* ---------- Portada ---------- */
+  .hero{
+    max-width:1280px; margin:0 auto; padding:48px 20px 24px;
+    display:grid; grid-template-columns:minmax(0,1fr) 380px; gap:24px; align-items:center;
+  }
+  .hero-copy{min-width:0}
+  .hero-art{width:min(100%,400px); justify-self:center; filter:drop-shadow(0 24px 70px rgba(111,52,255,.4))}
+  .hero-art svg{display:block; width:100%; height:auto}
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr; padding:40px 16px 20px}
+    .hero-art{display:none}
+  }
+  .wordmark{
+    margin:0 0 22px; font-family:var(--display); font-weight:800;
+    font-size:clamp(3rem,10vw,7.6rem); line-height:.86; letter-spacing:-.045em; padding-bottom:.08em;
+    color:#fff;
+    background:linear-gradient(95deg,#fff 0%,var(--lilac) 38%,var(--mint) 100%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .wordmark{width:fit-content; max-width:100%}
+  .wordmark span{display:block}
+  .lead{margin:0 0 6px; font-size:clamp(.66rem,3.05vw,1.25rem); white-space:nowrap; color:var(--lilac); font-weight:500}
+  @supports (font-size:1cqw){
+    .hero-copy{container-type:inline-size}
+    .lead{font-size:min(1.25rem, calc(100cqw / 27.8))}
+  }
+  .quip{margin:0 0 24px; font-size:clamp(.95rem,2.4vw,1.25rem); color:var(--mint); font-weight:600}
+  .hero-actions{display:flex; flex-wrap:wrap; gap:12px}
+
+  .btn{
+    font-weight:700; font-size:1rem; cursor:pointer; border:0; border-radius:100px;
+    padding:.9em 1.7em; background:var(--violet); color:#fff;
+    box-shadow:0 10px 34px rgba(111,52,255,.5);
+  }
+  .btn:active{transform:translateY(2px)}
+  .btn.ghost{background:transparent; border:1px solid var(--line); box-shadow:none; color:var(--lilac); text-decoration:none; display:inline-block}
+
+  /* ---------- Cinta de próximos ---------- */
+  .ticker{
+    overflow:hidden; white-space:nowrap; margin:0 0 28px;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  }
+  .ticker-track{display:flex; width:max-content; animation:tape 40s linear infinite}
+  .ticker-set{display:flex; align-items:center; gap:10px; padding-right:10px}
+  .tk{
+    display:inline-flex; align-items:baseline; gap:8px; padding:.5em 1.1em; cursor:pointer;
+    border:1px solid var(--line); border-radius:100px; background:var(--glass); color:var(--lilac); font-weight:500;
+  }
+  .tk:hover{border-color:var(--mint)}
+  .ticker:hover .ticker-track,.ticker:focus-within .ticker-track{animation-play-state:paused}
+  .tk b{color:var(--mint); font-weight:700}
+  .tk .h{color:#fff; font-weight:600}
+  @keyframes tape{to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion:reduce){
+    .ticker{overflow-x:auto; -webkit-mask-image:none; mask-image:none}
+    .ticker-track{animation:none}
+  }
+
+  /* ---------- Estructura ---------- */
+  .wrap{max-width:1280px; margin:0 auto; padding:0 20px 120px}
+  .layout{display:grid; grid-template-columns:300px minmax(0,1fr); gap:28px; align-items:start}
+  .side{
+    position:sticky; top:16px; display:grid; gap:16px;
+    max-height:calc(100vh - 32px); max-height:calc(100dvh - 32px);
+    overflow-y:auto; padding-right:6px;
+    scrollbar-width:thin; scrollbar-color:rgba(215,212,255,.3) transparent;
+  }
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr}
+    .side{position:static; max-height:none; overflow:visible; padding-right:0}
+  }
+  .panel{
+    background:var(--glass); border:1px solid var(--line); border-radius:28px; padding:18px;
+    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  }
+  .panel h2{margin:0 0 14px; font-family:var(--display); font-weight:700; font-size:1.25rem; letter-spacing:-.02em; color:#fff}
+
+  /* ---------- Calendario ---------- */
+  .cal-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px}
+  .cal-head h2{margin:0; font-size:1.12rem; white-space:nowrap}
+  .nav{
+    width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:transparent;
+    color:var(--lilac); font-size:1.3rem; line-height:1; cursor:pointer; display:grid; place-items:center; padding:0 0 3px;
+  }
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px}
+  .dow{text-align:center; font-size:.75rem; font-weight:600; padding:2px 0 6px; color:var(--mut)}
+  .cd{
+    aspect-ratio:1; border:1px solid transparent; border-radius:50%; background:transparent; color:var(--lilac);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+    cursor:pointer; padding:0; min-width:0;
+  }
+  .cd .n{font-weight:600; font-size:.92rem; line-height:1}
+  .cd.has{background:rgba(111,52,255,.28); color:#fff}
+  .cd.today{border-color:var(--mint)}
+  .cd.sel{background:var(--violet); color:#fff; border-color:var(--violet)}
+  .dots{display:flex; gap:3px; height:5px}
+  .dots i{width:5px; height:5px; border-radius:50%}
+
+  /* ---------- Filtros ---------- */
+  .field{display:grid; gap:6px; margin-bottom:14px}
+  .field label,.lbl{font-weight:600; font-size:.88rem; color:#fff}
+  input[type=text],input[type=search],input[type=date],input[type=time],input[type=url],select,textarea{
+    width:100%; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:16px;
+    padding:.72em .95em; color:#fff; font-size:16px;
+  }
+  input::placeholder,textarea::placeholder{color:#7f78b0}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--mint); outline-offset:1px}
+  select option{background:#120a2b; color:#fff}
+  textarea{resize:vertical; min-height:88px}
+  .chips{display:flex; flex-wrap:wrap; gap:7px}
+  .chip{
+    border:1px solid var(--line); background:transparent; color:var(--lilac); border-radius:100px;
+    padding:.28em .75em; font-size:.82rem; font-weight:600; cursor:pointer;
+  }
+  .chip[aria-pressed=true]{background:var(--c,var(--mint)); border-color:transparent; color:#0a0618}
+
+  /* ---------- Lista ---------- */
+  .list-head{display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; margin-bottom:22px}
+  .list-head h2{margin:0; font-family:var(--display); font-weight:700; font-size:1.5rem; letter-spacing:-.02em; color:#fff}
+  .pill{
+    display:inline-flex; align-items:center; gap:10px; border:1px solid var(--mint); color:var(--mint);
+    border-radius:100px; padding:.2em .3em .2em 1em; font-weight:600; font-size:.92rem;
+  }
+  .pill button{border:0; background:var(--mint); color:#04150f; border-radius:100px; padding:.25em .9em; cursor:pointer; font-size:.85rem; font-weight:700}
+  .note{border:1px solid var(--line); border-radius:20px; padding:12px 16px; margin:0 0 18px; color:var(--lilac)}
+
+  .daygroup{margin-bottom:28px}
+  .daygroup > h3{margin:0 0 12px; display:flex; align-items:baseline; gap:6px 14px; flex-wrap:wrap; font-weight:400}
+  .daygroup > h3::after{content:""; flex:1 1 40px; height:1px; background:var(--line); align-self:center}
+  .dg-big{font-family:var(--display); font-weight:800; font-size:clamp(1.5rem,3.4vw,2.1rem); line-height:1; letter-spacing:-.03em; color:#fff}
+  .dg-small{color:var(--mint); font-weight:600}
+  .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px}
+
+  .card{display:flex; flex-direction:column; background:var(--glass); border:1px solid var(--line); border-radius:22px; padding:8px; scroll-margin:24px}
+  .card.flash{animation:flash 1.8s ease}
+  @keyframes flash{
+    0%,100%{box-shadow:0 0 0 0 rgba(168,240,224,0); border-color:var(--line)}
+    18%,60%{box-shadow:0 0 0 3px var(--mint), 0 0 44px rgba(168,240,224,.4); border-color:var(--mint)}
+  }
+  @media (prefers-reduced-motion:reduce){ .card.flash{animation:none; border-color:var(--mint)} }
+  .pw{position:relative}
+  .poster{
+    display:block; width:100%; aspect-ratio:1/1; padding:0; border:0; overflow:hidden; border-radius:16px;
+    background:#120a2b; cursor:zoom-in;
+  }
+  .poster img{width:100%; height:100%; object-fit:cover; display:block}
+  .poster{position:relative}
+  .poster.fit::before{content:""; position:absolute; inset:-24px; background:var(--bg) center/cover; filter:blur(22px) brightness(.55) saturate(1.25)}
+  .poster.fit img{position:relative; object-fit:contain}
+  .poster.ph{
+    cursor:default; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    background:radial-gradient(120% 90% at 20% 0%, var(--c), transparent 62%), linear-gradient(#1b0f3f,#0a0618);
+  }
+  .poster.ph .big{font-size:3rem; line-height:1}
+  .poster.ph small{color:var(--lilac); font-weight:600; opacity:.85; font-size:.78rem}
+  .chip-date,.chip-cat{
+    position:absolute; z-index:2; pointer-events:none; color:#fff;
+    background:rgba(7,4,15,.7); border:1px solid rgba(255,255,255,.18);
+    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  }
+  .chip-date{top:8px; left:8px; border-radius:12px; padding:3px 9px; text-align:center; line-height:1.05}
+  .chip-date b{display:block; font-family:var(--display); font-weight:800; font-size:1.1rem}
+  .chip-date span{font-size:.68rem; font-weight:600; color:var(--mint)}
+  .chip-cat{
+    left:8px; bottom:8px; max-width:calc(100% - 16px); border-radius:100px; padding:.16em .65em;
+    font-size:.72rem; font-weight:600; border-color:var(--c); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+
+  .info{padding:10px 6px 6px; display:flex; flex-direction:column; gap:6px; flex:1; min-width:0}
+  .card h4{margin:0; font-family:var(--display); font-weight:700; font-size:1.05rem; line-height:1.12; letter-spacing:-.02em; color:#fff; overflow-wrap:anywhere}
+  .meta{list-style:none; margin:0; padding:0; display:grid; gap:2px; font-weight:500; font-size:.82rem}
+  .meta li{display:flex; gap:7px; align-items:flex-start}
+  .ic{flex:none; color:var(--mint); margin-top:1px; display:inline-flex}
+  .ic svg{width:15px; height:15px}
+  .desc{margin:0; overflow-wrap:anywhere; white-space:pre-line; color:var(--lilac); font-size:.82rem; line-height:1.4}
+  .desc.clamp{cursor:pointer}
+  .desc.clamp:not(.open){display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+  .by{margin:0; font-size:.75rem; color:var(--mut); font-weight:500}
+  .actions{display:flex; flex-wrap:wrap; gap:6px; margin-top:auto; padding-top:4px}
+  .sm{
+    display:inline-flex; align-items:center; border:1px solid var(--line); border-radius:100px; background:transparent; color:var(--lilac);
+    padding:.26em .68em; font-size:.76rem; font-weight:600; text-decoration:none; cursor:pointer; white-space:nowrap;
+  }
+  .sm.wa{background:var(--mint); color:#04150f; border-color:transparent}
+  .sm.del{color:var(--rose); border-color:rgba(255,143,177,.4)}
+
+  .empty{border:1px dashed var(--line); border-radius:28px; padding:34px 24px; text-align:center}
+  .empty p{margin:0 0 18px; font-family:var(--display); font-weight:700; font-size:1.4rem; line-height:1.15; letter-spacing:-.02em; color:#fff}
+
+  footer{max-width:1280px; margin:0 auto; padding:0 20px 48px; display:flex; flex-wrap:wrap; gap:10px 22px; align-items:center; font-size:.92rem; color:var(--mut)}
+  footer a{color:var(--mint); font-weight:600}
+
+  /* ---------- Celular: tarjetas en 2 columnas y filtros en una sola fila deslizable ---------- */
+  @media (max-width:900px){
+    .chips{flex-wrap:nowrap; overflow-x:auto; padding-bottom:6px; scrollbar-width:none}
+    .chips::-webkit-scrollbar{display:none}
+    .chip{flex:none}
+  }
+  @media (max-width:560px){
+    .cards{grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px}
+    .card{padding:6px; border-radius:18px}
+    .poster{border-radius:13px}
+    .poster.ph .big{font-size:2.3rem}
+    .poster.ph small{display:none}
+    .info{padding:8px 4px 4px}
+    .card h4{font-size:.95rem}
+    .meta{font-size:.78rem}
+    .desc{font-size:.78rem}
+  }
+
+  /* ---------- Botón flotante (celu) ---------- */
+  .fab{display:none}
+  @media (max-width:720px){
+    .fab.show{display:block; position:fixed; right:16px; bottom:calc(16px + env(safe-area-inset-bottom)); z-index:20}
+  }
+
+  /* ---------- Ventanas ---------- */
+  dialog{
+    padding:0; color:var(--lilac); background:#0c0722; border:1px solid var(--line); border-radius:32px;
+    width:min(600px,94vw); max-height:92vh; overflow:auto;
+    box-shadow:0 30px 90px rgba(0,0,0,.75), 0 0 0 1px rgba(111,52,255,.25);
+  }
+  dialog::backdrop{background:rgba(0,0,0,.74); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px)}
+  .dlg-in{padding:24px}
+  .dlg-head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:6px}
+  .dlg-head h2{margin:0; font-family:var(--display); font-weight:800; font-size:2rem; line-height:1; letter-spacing:-.035em; color:#fff}
+  .sub{margin:0 0 18px; color:var(--mint); font-weight:600}
+  .x{
+    flex:none; width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:transparent;
+    color:var(--lilac); cursor:pointer; font-size:1rem; line-height:1; padding:0;
+  }
+  .f-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 14px}
+  .f-grid .full{grid-column:1/-1}
+  @media (max-width:520px){ .f-grid{grid-template-columns:1fr} }
+  .hint{font-size:.85rem; color:var(--mut)}
+  input[type=file]{padding:.5em .6em}
+  input[type=file]::file-selector-button{
+    margin-right:12px; border:0; border-radius:100px; padding:.5em 1.1em; background:var(--violet); color:#fff; font-weight:700; cursor:pointer;
+  }
+  .preview{display:none; margin-top:8px; max-height:200px; border:1px solid var(--line); border-radius:16px}
+  .preview.on{display:block}
+  .hp{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden}
+  .err{color:var(--rose); font-weight:600; min-height:1.4em; margin:2px 0 12px}
+  #lightbox{background:transparent; border:0; box-shadow:none; width:auto; max-width:96vw; overflow:visible}
+  #lightbox img{display:block; max-width:94vw; max-height:86vh; border-radius:22px; background:#000}
+  #lightbox .x{position:absolute; top:-14px; right:-10px; background:#0c0722}
+
+  .toast{
+    position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:60; max-width:92vw;
+    background:#120a2b; color:#fff; border:1px solid var(--mint); border-radius:100px; padding:.75em 1.4em;
+    font-weight:600; text-align:center; box-shadow:0 12px 40px rgba(0,0,0,.6);
+  }
+  .toast[hidden]{display:none}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-copy">
+    <h1 class="wordmark"><span>Programas</span><span>Divertidos</span></h1>
+    <p class="lead">Todo lo que pasa en CABA y alrededores, en un solo lugar.</p>
+    <p class="quip" id="quip"></p>
+    <div class="hero-actions">
+      <button class="btn" id="addBtn" type="button">Cargar un programa</button>
+      <a class="btn ghost" id="shareTop" href="#" target="_blank" rel="noopener">Mandar el link al grupo</a>
+    </div>
+  </div>
+  <div class="hero-art" id="heroArt" aria-hidden="true"></div>
+</header>
+
+<div class="ticker" role="group" aria-label="Programas de los próximos días">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<main class="wrap">
+
+  <div class="layout">
+    <aside class="side">
+      <section class="panel" aria-label="Calendario del mes">
+        <div class="cal-head">
+          <button class="nav" id="prevM" type="button" aria-label="Mes anterior">‹</button>
+          <h2 id="calTitle" aria-live="polite"></h2>
+          <button class="nav" id="nextM" type="button" aria-label="Mes siguiente">›</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </section>
+
+      <section class="panel" aria-label="Filtros">
+        <h2>¿Qué te tienta?</h2>
+        <div class="field">
+          <label for="q">Buscar</label>
+          <input type="search" id="q" placeholder="Nombre, lugar u organizador" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="zona">Zona</label>
+          <select id="zona"></select>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <span class="lbl" id="catLbl">Tipo de plan</span>
+          <div class="chips" id="chips" role="group" aria-labelledby="catLbl"></div>
+        </div>
+      </section>
+    </aside>
+
+    <section aria-live="polite">
+      <div class="list-head" id="listHead"></div>
+      <div id="list"></div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <span>Hecho para el grupo de WhatsApp Programas Divertidos.</span>
+  <a id="shareSite" href="#" target="_blank" rel="noopener">Pasale el link a alguien que no sale nunca</a>
+</footer>
+
+<button class="btn fab" id="fabBtn" type="button">Cargar un programa</button>
+
+<!-- Formulario para cargar un programa -->
+<dialog id="formDlg" aria-labelledby="formTitle">
+  <div class="dlg-in">
+    <div class="dlg-head">
+      <h2 id="formTitle">Cargá tu programa</h2>
+      <button class="x" type="button" id="closeForm" aria-label="Cerrar">✕</button>
+    </div>
+    <p class="sub">Que se entere todo el grupo.</p>
+    <form id="evForm" novalidate>
+      <div class="f-grid">
+        <div class="field full">
+          <label for="f-titulo">Nombre del programa *</label>
+          <input type="text" id="f-titulo" name="titulo" maxlength="90" required placeholder="Ej: Previa en la terraza">
+        </div>
+        <div class="field">
+          <label for="f-fecha">Fecha *</label>
+          <input type="date" id="f-fecha" name="fecha" required>
+        </div>
+        <div class="field">
+          <label for="f-hora">Hora de inicio</label>
+          <input type="time" id="f-hora" name="hora">
+        </div>
+        <div class="field full">
+          <label for="f-lugar">¿Dónde es? *</label>
+          <input type="text" id="f-lugar" name="lugar" maxlength="140" required placeholder="Ej: Parque Centenario, Caballito">
+        </div>
+        <div class="field">
+          <label for="f-zona">Zona *</label>
+          <select id="f-zona" name="zona" required></select>
+        </div>
+        <div class="field">
+          <label for="f-cat">Tipo de plan *</label>
+          <select id="f-cat" name="categoria" required></select>
+        </div>
+        <div class="field">
+          <label for="f-precio">Precio</label>
+          <input type="text" id="f-precio" name="precio" maxlength="40" placeholder="Gratis, $5000, a la gorra…">
+        </div>
+        <div class="field">
+          <label for="f-org">¿Quién lo trae?</label>
+          <input type="text" id="f-org" name="organizador" maxlength="60" autocomplete="name" placeholder="Tu nombre u organización">
+        </div>
+        <div class="field full">
+          <label for="f-desc">Descripción</label>
+          <textarea id="f-desc" name="descripcion" maxlength="500" placeholder="Contá lo justo: qué es, qué llevar, cómo anotarse. Sin novelas."></textarea>
+        </div>
+        <div class="field full">
+          <label for="f-link">Link de entradas o info</label>
+          <input type="url" id="f-link" name="link" inputmode="url" placeholder="https://…">
+        </div>
+        <div class="field full">
+          <label for="f-flyer">Flyer</label>
+          <input type="file" id="f-flyer" accept="image/*">
+          <span class="hint">Foto o imagen del flyer. Se achica sola para que cargue rápido.</span>
+          <img class="preview" id="flyerPreview" alt="Vista previa del flyer">
+        </div>
+        <div class="hp" aria-hidden="true">
+          <label>No completar este campo <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        </div>
+      </div>
+      <p class="err" id="formErr" role="alert"></p>
+      <button class="btn" id="submitBtn" type="submit">Publicar en el calendario</button>
+    </form>
+  </div>
+</dialog>
+
+<!-- Flyer en grande -->
+<dialog id="lightbox" aria-label="Flyer en grande">
+  <button class="x" type="button" id="closeLb" aria-label="Cerrar">✕</button>
+  <img id="lbImg" alt="">
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ================= Configuración y datos fijos ================= */
+const CFG = Object.assign({ API_URL: '', REFRESH_MS: 60000 }, window.PD_CONFIG || {});
+const DEMO = !CFG.API_URL;
+
+const CATS = [
+  { id: 'Fiesta y música',      emoji: '🎉', color: '#ff5cc8' },
+  { id: 'Arte y cultura',       emoji: '🎨', color: '#b79bff' },
+  { id: 'Comida y bebida',      emoji: '🍕', color: '#ff9a4d' },
+  { id: 'Aire libre',           emoji: '🌳', color: '#4fe3b5' },
+  { id: 'Deporte y movimiento', emoji: '🛼', color: '#5cc8ff' },
+  { id: 'Feria y mercado',      emoji: '🛍️', color: '#ffd426' },
+  { id: 'Taller y comunidad',   emoji: '🧶', color: '#ff7f7f' },
+  { id: 'Otro',                 emoji: '✨', color: '#d7d4ff' }
+];
+const ZONAS = ['CABA', 'GBA Norte', 'GBA Sur', 'GBA Oeste', 'Otra'];
+const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MESES_CORTOS = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const QUIPS = [
+  'Dejá de preguntar “¿qué hacemos?” en el grupo.',
+  'Tu excusa oficial para no quedarte en casa.',
+  'El finde no se arma solo. Bueno, ahora un poco sí.',
+  'Acá se viene a ver qué hay, no a decir “ay, otro día”.',
+  'Si no está acá, no pasó.',
+  'Más planes que ganas de madrugar el lunes.'
+];
+const ICONS = {
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  pin: '<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+  tag: '<path d="M3 9a2 2 0 0 0 0 6v3h18v-3a2 2 0 0 1 0-6V6H3v3z"/><path d="M13 6v12" stroke-dasharray="2 2"/>'
+};
+
+/* ================= Utilidades ================= */
+const $ = s => document.querySelector(s);
+const pad = n => String(n).padStart(2, '0');
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const norm = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const parseYmd = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d, 12); };
+const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n, 12);
+const todayStr = () => ymd(new Date());
+const catOf = id => CATS.find(c => c.id === id) || CATS[CATS.length - 1];
+
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k === 'class') el.className = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) {
+    if (kid == null || kid === false) continue;
+    el.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+  }
+  return el;
+}
+
+// Los íconos son texto fijo escrito acá arriba (nunca datos de usuarios), por eso es seguro usar innerHTML.
+function ico(name) {
+  const s = h('span', { class: 'ic', 'aria-hidden': 'true' });
+  s.innerHTML = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</svg>`;
+  return s;
+}
+
+function safeUrl(u) {
+  try {
+    const x = new URL(u);
+    return (x.protocol === 'http:' || x.protocol === 'https:') ? x.href : '';
+  } catch { return ''; }
+}
+
+// Guardado local (con plan B en memoria si el navegador lo bloquea)
+const mem = {};
+const store = {
+  get(k, fb) { try { const v = localStorage.getItem(k); return v == null ? fb : JSON.parse(v); } catch { return k in mem ? mem[k] : fb; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { mem[k] = v; } }
+};
+
+function getToken() {
+  let t = store.get('pd_token', '');
+  if (!t) {
+    t = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now()).replace(/-/g, '');
+    store.set('pd_token', t);
+  }
+  return t;
+}
+const mineIds = () => store.get('pd_mine', []);
+const addMine = id => store.set('pd_mine', [...new Set([...mineIds(), id])]);
+
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast');
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, 3800);
+}
+
+/* ================= Datos: eventos.js o Google (Apps Script) ================= */
+// Sin conexión a Google: la base es eventos.js. Lo que cargue cada persona queda guardado solo en su navegador.
+const LOCAL_KEY = 'pd_local_v2';
+try { localStorage.removeItem('pd_demo'); } catch { /* datos de prueba viejos: se descartan */ }
+function demoLoad() {
+  const base = Array.isArray(window.PD_EVENTS) ? window.PD_EVENTS : [];
+  const own = store.get(LOCAL_KEY, []).filter(e => !base.some(b => b.id === e.id));
+  return [...base, ...own];
+}
+function demoPost(p) {
+  const own = store.get(LOCAL_KEY, []);
+  if (p.action === 'add') {
+    const ev = {
+      id: 'm' + Date.now().toString(36), titulo: p.titulo, fecha: p.fecha, hora: p.hora, lugar: p.lugar, zona: p.zona,
+      categoria: p.categoria, precio: p.precio, descripcion: p.descripcion, link: p.link, organizador: p.organizador,
+      flyer: p.flyer || '', origen: 'local'
+    };
+    own.push(ev); store.set(LOCAL_KEY, own);
+    return { ok: true, event: ev };
+  }
+  if (p.action === 'delete') {
+    store.set(LOCAL_KEY, own.filter(e => e.id !== p.id));
+    return { ok: true };
+  }
+  return { ok: false, error: 'Acción desconocida' };
+}
+
+async function apiList() {
+  if (DEMO) return demoLoad();
+  const r = await fetch(CFG.API_URL + '?action=list', { cache: 'no-store' });
+  const data = await r.json();
+  if (!data.ok) throw new Error(data.error || 'Error');
+  return data.events;
+}
+async function apiPost(payload) {
+  if (DEMO) return demoPost(payload);
+  // text/plain evita un "preflight" de CORS que Apps Script no responde
+  const r = await fetch(CFG.API_URL, {
+    method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload)
+  });
+  return r.json();
+}
+
+/* ================= Estado ================= */
+const now = new Date();
+const state = {
+  events: [], loaded: false, error: '',
+  date: null, zona: '', cat: '', q: '',
+  view: { y: now.getFullYear(), m: now.getMonth() }
+};
+
+const matches = ev =>
+  (!state.zona || ev.zona === state.zona) &&
+  (!state.cat || ev.categoria === state.cat) &&
+  (!state.q || norm([ev.titulo, ev.lugar, ev.descripcion, ev.organizador].join(' ')).includes(norm(state.q)));
+const byWhen = (a, b) => (a.fecha + (a.hora || '99:99')).localeCompare(b.fecha + (b.hora || '99:99'));
+
+/* ================= Enlaces útiles ================= */
+function longDate(s) {
+  const d = parseYmd(s);
+  return `${DIAS[d.getDay()]} ${d.getDate()} de ${MESES[d.getMonth()]}`;
+}
+function dayHeading(s) {
+  const t = todayStr(), tm = ymd(addDays(new Date(), 1)), d = parseYmd(s);
+  if (s === t) return { big: 'Hoy', small: longDate(s) };
+  if (s === tm) return { big: 'Mañana', small: longDate(s) };
+  return { big: cap(DIAS[d.getDay()]), small: `${d.getDate()} de ${MESES[d.getMonth()]}` };
+}
+function siteUrl() { return location.href.split('#')[0]; }
+function waLink(ev) {
+  const txt = [
+    `🎉 ${ev.titulo}`,
+    `📅 ${longDate(ev.fecha)}${ev.hora ? ' · ' + ev.hora + ' hs' : ''}`,
+    `📍 ${ev.lugar} (${ev.zona})`,
+    ev.precio ? `💸 ${ev.precio}` : '',
+    ev.link && safeUrl(ev.link) ? ev.link : '',
+    '',
+    `Más planes en Programas Divertidos: ${siteUrl()}`
+  ].filter((l, i, a) => l !== '' || (i > 0 && a[i - 1] !== '')).join('\n');
+  return 'https://wa.me/?text=' + encodeURIComponent(txt);
+}
+function gcalLink(ev) {
+  let dates;
+  if (ev.hora) {
+    const [hh, mm] = ev.hora.split(':').map(Number);
+    const s = parseYmd(ev.fecha); s.setHours(hh, mm, 0, 0);
+    const e = new Date(s.getTime() + 3 * 3600000);
+    const f = x => `${ymd(x).replace(/-/g, '')}T${pad(x.getHours())}${pad(x.getMinutes())}00`;
+    dates = `${f(s)}/${f(e)}`;
+  } else {
+    const s = parseYmd(ev.fecha);
+    dates = `${ymd(s).replace(/-/g, '')}/${ymd(addDays(s, 1)).replace(/-/g, '')}`;
+  }
+  const p = new URLSearchParams({
+    text: ev.titulo, dates, location: ev.lugar, ctz: 'America/Argentina/Buenos_Aires',
+    details: (ev.descripcion || '') + (ev.link && safeUrl(ev.link) ? '\n' + ev.link : '')
+  });
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&' + p.toString();
+}
+
+/* ================= Dibujo de la página ================= */
+function renderTicker() {
+  const track = $('#tickerTrack'); track.replaceChildren();
+  const t = todayStr(), lim = ymd(addDays(new Date(), 7));
+  const soon = state.events.filter(e => e.fecha >= t && e.fecha <= lim).sort(byWhen);
+  const source = soon.length ? soon : [null];
+  const pill = (ev, hidden) => {
+    const common = { class: 'tk', type: 'button', tabindex: hidden ? '-1' : null, 'aria-hidden': hidden ? 'true' : null };
+    return ev
+      ? h('button', { ...common, title: 'Ver este programa', onclick: () => goToEvent(ev.id) },
+          h('b', {}, dayHeading(ev.fecha).big), ev.hora ? h('span', { class: 'h' }, ev.hora) : null, ev.titulo)
+      : h('button', { ...common, onclick: openForm },
+          h('b', {}, 'Semana tranquila.'), 'Nadie cargó nada todavía. Cargá algo vos.');
+  };
+  const round = (set, hidden) => source.forEach(ev => set.append(pill(ev, hidden)));
+  // Se repite el contenido hasta cubrir el ancho de la pantalla, así la cinta nunca queda con huecos
+  const first = h('div', { class: 'ticker-set' });
+  track.append(first);
+  round(first, false);
+  let rounds = 1;
+  while (first.scrollWidth < window.innerWidth && rounds < 8) { round(first, true); rounds++; }
+  const second = h('div', { class: 'ticker-set', 'aria-hidden': 'true' });
+  for (let i = 0; i < rounds; i++) round(second, true);
+  track.append(second);
+  const chars = track.textContent.length / 2;
+  track.style.animationDuration = Math.max(24, Math.round(chars * 0.3)) + 's';
+}
+
+// Al tocar una pastilla de la cinta: limpia filtros, salta a la tarjeta y la resalta un momento
+function goToEvent(id) {
+  const ev = state.events.find(e => e.id === id);
+  if (!ev) return;
+  state.q = ''; state.zona = ''; state.cat = ''; state.date = null;
+  $('#q').value = ''; $('#zona').value = '';
+  const d = parseYmd(ev.fecha);
+  state.view = { y: d.getFullYear(), m: d.getMonth() };
+  renderCalendar(); renderChips(); renderList();
+  const el = document.getElementById('ev-' + id);
+  if (!el) return;
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  el.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'center' });
+  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 1900);
+}
+
+function renderCalendar() {
+  const { y, m } = state.view;
+  $('#calTitle').textContent = `${cap(MESES[m])} ${y}`;
+  const grid = $('#calGrid'); grid.replaceChildren();
+  ['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom'].forEach(n => grid.append(h('div', { class: 'dow', 'aria-hidden': 'true' }, n)));
+  const offset = (new Date(y, m, 1, 12).getDay() + 6) % 7;
+  const total = new Date(y, m + 1, 0).getDate();
+  for (let i = 0; i < offset; i++) grid.append(h('div'));
+  const byDay = {};
+  state.events.filter(matches).forEach(ev => { (byDay[ev.fecha] = byDay[ev.fecha] || []).push(ev); });
+  const today = todayStr();
+  for (let d = 1; d <= total; d++) {
+    const s = `${y}-${pad(m + 1)}-${pad(d)}`;
+    const evs = byDay[s] || [];
+    const cls = ['cd'];
+    if (s === today) cls.push('today');
+    if (s === state.date) cls.push('sel');
+    if (evs.length) cls.push('has');
+    const label = `${d} de ${MESES[m]}` + (evs.length ? `, ${evs.length} ${evs.length === 1 ? 'programa' : 'programas'}` : '');
+    grid.append(h('button', {
+      class: cls.join(' '), type: 'button', 'aria-pressed': s === state.date ? 'true' : 'false', 'aria-label': label,
+      onclick: () => { state.date = state.date === s ? null : s; renderAll(); }
+    },
+      h('span', { class: 'n' }, d),
+      h('span', { class: 'dots' }, evs.slice(0, 3).map(ev => h('i', { style: `background:${catOf(ev.categoria).color}` })))
+    ));
+  }
+}
+
+function renderChips() {
+  const box = $('#chips'); box.replaceChildren();
+  const mk = (id, label, color) => h('button', {
+    class: 'chip', type: 'button', style: color ? `--c:${color}` : null,
+    'aria-pressed': String(state.cat === id),
+    onclick: () => { state.cat = id; renderAll(); }
+  }, label);
+  box.append(mk('', 'Todos'));
+  CATS.forEach(c => box.append(mk(c.id, `${c.emoji} ${c.id}`, c.color)));
+}
+
+function posterBlock(ev, cat) {
+  const d = parseYmd(ev.fecha);
+  const wrap = h('div', { class: 'pw' });
+  const placeholder = () => h('div', { class: 'poster ph', style: `--c:${cat.color}` },
+    h('span', { class: 'big', 'aria-hidden': 'true' }, cat.emoji), h('small', {}, 'Sin flyer, con ganas'));
+  if (!ev.flyer) wrap.append(placeholder());
+  else {
+    const img = h('img', { src: ev.flyer, alt: `Flyer de ${ev.titulo}`, loading: 'lazy', referrerpolicy: 'no-referrer' });
+    const btn = h('button', { class: 'poster', type: 'button', 'aria-label': `Ver el flyer de ${ev.titulo} en grande`, onclick: () => openLightbox(ev) }, img);
+    img.addEventListener('load', () => {
+      const r = img.naturalWidth / img.naturalHeight;
+      if (r < 0.85 || r > 1.25) {   // flyer apaisado o muy vertical: se ve entero sobre su propio fondo desenfocado
+        btn.classList.add('fit');
+        btn.style.setProperty('--bg', `url("${ev.flyer.replace(/"/g, '%22')}")`);
+      }
+    });
+    img.addEventListener('error', () => { btn.replaceWith(placeholder()); });
+    wrap.append(btn);
+  }
+  wrap.append(
+    h('div', { class: 'chip-date', 'aria-hidden': 'true' }, h('b', {}, d.getDate()), h('span', {}, MESES_CORTOS[d.getMonth()])),
+    h('span', { class: 'chip-cat', style: `--c:${cat.color}` }, `${cat.emoji} ${cat.id}`)
+  );
+  return wrap;
+}
+
+// Descripciones largas: se ven 2 renglones y al tocarlas se despliegan
+function descBlock(text) {
+  if (!text) return null;
+  if (text.length <= 70) return h('p', { class: 'desc' }, text);
+  const toggle = () => { const open = p.classList.toggle('open'); p.setAttribute('aria-expanded', String(open)); };
+  const p = h('p', {
+    class: 'desc clamp', role: 'button', tabindex: '0', 'aria-expanded': 'false', title: 'Tocá para ver todo',
+    onclick: toggle, onkeydown: e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } }
+  }, text);
+  return p;
+}
+
+function card(ev) {
+  const cat = catOf(ev.categoria);
+  const link = ev.link ? safeUrl(ev.link) : '';
+  const mine = mineIds().includes(ev.id);
+  return h('article', { class: 'card', id: 'ev-' + ev.id },
+    posterBlock(ev, cat),
+    h('div', { class: 'info' },
+      h('h4', {}, ev.titulo),
+      h('ul', { class: 'meta' },
+        ev.hora ? h('li', {}, ico('clock'), h('span', {}, `${ev.hora} hs`)) : null,
+        h('li', {}, ico('pin'), h('span', {}, `${ev.lugar} (${ev.zona})`)),
+        ev.precio ? h('li', {}, ico('tag'), h('span', {}, ev.precio)) : null
+      ),
+      descBlock(ev.descripcion),
+      ev.organizador ? h('p', { class: 'by' }, `Lo trae ${ev.organizador}`) : null,
+      h('div', { class: 'actions' },
+        h('a', { class: 'sm wa', href: waLink(ev), target: '_blank', rel: 'noopener' }, 'Avisale al grupo'),
+        h('a', { class: 'sm', href: gcalLink(ev), target: '_blank', rel: 'noopener' }, 'Agendar'),
+        link ? h('a', { class: 'sm', href: link, target: '_blank', rel: 'noopener noreferrer' }, 'Más info') : null,
+        mine ? h('button', { class: 'sm del', type: 'button', onclick: () => removeEvent(ev) }, 'Me arrepentí') : null
+      )
+    )
+  );
+}
+
+function renderList() {
+  const head = $('#listHead'); head.replaceChildren();
+  const root = $('#list'); root.replaceChildren();
+  const today = todayStr();
+
+  const evs = state.events.filter(matches)
+    .filter(ev => state.date ? ev.fecha === state.date : ev.fecha >= today)
+    .sort(byWhen);
+
+  head.append(h('h2', {}, state.date ? 'Ese día' : 'Lo que se viene'));
+  if (state.date) {
+    head.append(h('span', { class: 'pill' }, longDate(state.date),
+      h('button', { type: 'button', onclick: () => { state.date = null; renderAll(); } }, 'Ver todos')));
+  }
+
+  if (state.error) root.append(h('p', { class: 'note' }, state.error));
+
+  if (!state.loaded) { root.append(h('p', { class: 'note' }, 'Prendiendo las luces…')); return; }
+
+  if (!evs.length) {
+    const anything = state.events.some(e => e.fecha >= today);
+    const filtered = state.zona || state.cat || state.q || state.date;
+    root.append(h('div', { class: 'empty' },
+      h('p', {}, anything && filtered ? 'Nada con esos filtros. Capaz sos muy exigente.' : 'Silencio total. Así no se arma ningún finde.'),
+      anything && filtered
+        ? h('button', { class: 'btn', type: 'button', onclick: clearFilters }, 'Sacar los filtros')
+        : h('button', { class: 'btn', type: 'button', onclick: openForm }, 'Cargar el primero')
+    ));
+    return;
+  }
+
+  const groups = [];
+  evs.forEach(ev => {
+    const last = groups[groups.length - 1];
+    if (last && last.fecha === ev.fecha) last.items.push(ev); else groups.push({ fecha: ev.fecha, items: [ev] });
+  });
+  groups.forEach(g => {
+    const hd = dayHeading(g.fecha);
+    root.append(h('section', { class: 'daygroup' },
+      h('h3', {}, h('span', { class: 'dg-big' }, hd.big), h('span', { class: 'dg-small' }, hd.small)),
+      h('div', { class: 'cards' }, g.items.map(card))
+    ));
+  });
+}
+
+function clearFilters() {
+  state.q = ''; state.zona = ''; state.cat = ''; state.date = null;
+  $('#q').value = ''; $('#zona').value = '';
+  renderAll();
+}
+
+function renderAll() {
+  renderTicker(); renderCalendar(); renderChips(); renderList();
+}
+
+/* ================= Cargar y refrescar ================= */
+async function loadEvents() {
+  try {
+    state.events = await apiList();
+    state.error = '';
+    if (!DEMO) store.set('pd_cache', state.events);
+  } catch (e) {
+    state.error = 'No pude actualizar el calendario. Revisá tu conexión y probá de nuevo en un rato.';
+  }
+  state.loaded = true;
+  renderAll();
+}
+
+/* ================= Cargar un programa ================= */
+const dlg = $('#formDlg'), form = $('#evForm'), errBox = $('#formErr');
+let flyerPromise = null;
+
+function fillSelect(sel, values, placeholder) {
+  sel.replaceChildren();
+  if (placeholder) sel.append(h('option', { value: '' }, placeholder));
+  values.forEach(v => sel.append(h('option', { value: v.value ?? v }, v.label ?? v)));
+}
+
+function openForm() {
+  form.reset();
+  flyerPromise = null;
+  $('#flyerPreview').classList.remove('on');
+  errBox.textContent = '';
+  const f = $('#f-fecha');
+  f.min = todayStr(); f.max = ymd(addDays(new Date(), 365));
+  f.value = state.date && state.date >= todayStr() ? state.date : todayStr();
+  $('#f-org').value = store.get('pd_name', '');
+  dlg.showModal();
+  $('#f-titulo').focus();
+}
+
+async function fileToJpeg(file, max = 1100, quality = 0.82) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => {
+      const i = new Image(); i.onload = () => res(i);
+      i.onerror = () => rej(new Error('No pude leer esa imagen. Probá con un JPG o PNG.'));
+      i.src = url;
+    });
+    const scale = Math.min(1, max / Math.max(img.width, img.height));
+    const w = Math.round(img.width * scale), hh = Math.round(img.height * scale);
+    const c = document.createElement('canvas'); c.width = w; c.height = hh;
+    const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, hh); ctx.drawImage(img, 0, 0, w, hh);
+    return c.toDataURL('image/jpeg', quality);
+  } finally { URL.revokeObjectURL(url); }
+}
+
+$('#f-flyer').addEventListener('change', e => {
+  const file = e.target.files[0];
+  const pv = $('#flyerPreview');
+  errBox.textContent = '';
+  if (!file) { flyerPromise = null; pv.classList.remove('on'); return; }
+  if (!file.type.startsWith('image/')) { errBox.textContent = 'El flyer tiene que ser una imagen.'; e.target.value = ''; return; }
+  flyerPromise = fileToJpeg(file);
+  flyerPromise.then(d => { pv.src = d; pv.classList.add('on'); }).catch(err => {
+    errBox.textContent = err.message; pv.classList.remove('on'); flyerPromise = null;
+  });
+});
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  errBox.textContent = '';
+  const fd = new FormData(form);
+  const get = k => String(fd.get(k) || '').trim();
+  const p = {
+    action: 'add', titulo: get('titulo'), fecha: get('fecha'), hora: get('hora'), lugar: get('lugar'),
+    zona: get('zona'), categoria: get('categoria'), precio: get('precio'), descripcion: get('descripcion'),
+    link: get('link'), organizador: get('organizador'), website: get('website'), token: getToken(), flyer: ''
+  };
+  if (!p.titulo) return void (errBox.textContent = 'Poné el nombre del programa.');
+  if (!p.fecha) return void (errBox.textContent = 'Elegí la fecha.');
+  if (p.fecha < todayStr()) return void (errBox.textContent = 'La fecha ya pasó. Elegí una de hoy en adelante.');
+  if (!p.lugar) return void (errBox.textContent = 'Poné dónde es.');
+  if (!p.zona) return void (errBox.textContent = 'Elegí la zona.');
+  if (!p.categoria) return void (errBox.textContent = 'Elegí el tipo de plan.');
+  if (p.link) {
+    if (!/^https?:\/\//i.test(p.link)) p.link = 'https://' + p.link;
+    if (!safeUrl(p.link)) return void (errBox.textContent = 'El link no parece válido. Revisalo o dejalo vacío.');
+  }
+
+  const btn = $('#submitBtn');
+  btn.disabled = true; btn.textContent = 'Publicando…';
+  try {
+    if (flyerPromise) p.flyer = await flyerPromise;
+    const res = await apiPost(p);
+    if (!res || !res.ok) throw new Error((res && res.error) || 'No se pudo publicar. Probá de nuevo.');
+    if (p.organizador) store.set('pd_name', p.organizador);
+    if (res.event) {
+      addMine(res.event.id);
+      if (!state.events.some(x => x.id === res.event.id)) state.events.push(res.event);
+      const d = parseYmd(res.event.fecha);
+      state.view = { y: d.getFullYear(), m: d.getMonth() };
+    }
+    state.date = null;
+    dlg.close();
+    renderAll();
+    toast(res.duplicate ? 'Ese programa ya estaba cargado. Ojo con los clones.' : 'Listo, ya está en el calendario. Ahora hay que ir.');
+  } catch (err) {
+    errBox.textContent = err.message || 'No se pudo publicar. Probá de nuevo.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Publicar en el calendario';
+  }
+});
+
+async function removeEvent(ev) {
+  if (!confirm(`¿Borrar "${ev.titulo}" del calendario?`)) return;
+  try {
+    const res = await apiPost({ action: 'delete', id: ev.id, token: getToken() });
+    if (!res || !res.ok) throw new Error((res && res.error) || 'No se pudo borrar.');
+    state.events = state.events.filter(x => x.id !== ev.id);
+    renderAll();
+    toast('Borrado. Nadie vio nada.');
+  } catch (err) { toast(err.message); }
+}
+
+/* ================= Flyer en grande ================= */
+const lb = $('#lightbox');
+function openLightbox(ev) {
+  $('#lbImg').src = ev.flyer; $('#lbImg').alt = `Flyer de ${ev.titulo}`;
+  lb.showModal();
+}
+lb.addEventListener('click', e => { if (e.target === lb) lb.close(); });
+$('#closeLb').addEventListener('click', () => lb.close());
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+$('#closeForm').addEventListener('click', () => dlg.close());
+
+/* ================= Imagen de la portada: bola de espejos ================= */
+// Se dibuja con código (sin archivos externos). Para usar tu propia foto, reemplazá el contenido de #heroArt por un <img>.
+function discoBallSVG() {
+  const W = 420, H = 470, cx = 210, cy = 272, R = 166;
+  let a = 7;
+  const rnd = () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const Lv = [-0.55, 0.55, 0.63], ln = Math.hypot(...Lv), L = Lv.map(v => v / ln);
+  const mix = (c1, c2, k) => c1.map((v, i) => Math.round(v + (c2[i] - v) * k));
+  const DARK = [18, 8, 46], LIGHT = [215, 212, 255];
+  const TINTS = [[168, 240, 224], [255, 92, 200], [111, 52, 255], [111, 52, 255]];
+  const P = (p, l) => [cx + R * Math.cos(p) * Math.sin(l), cy - R * Math.sin(p)];
+  const rows = 14;
+  let tiles = '';
+  for (let i = 0; i < rows; i++) {
+    const p0 = -Math.PI / 2 + Math.PI * i / rows, p1 = -Math.PI / 2 + Math.PI * (i + 1) / rows, pm = (p0 + p1) / 2;
+    const cols = Math.max(6, Math.round(34 * Math.cos(pm)));
+    for (let j = 0; j < cols; j++) {
+      const l0 = -Math.PI + 2 * Math.PI * j / cols, l1 = -Math.PI + 2 * Math.PI * (j + 1) / cols, lm = (l0 + l1) / 2;
+      const nx = Math.cos(pm) * Math.sin(lm), ny = Math.sin(pm), nz = Math.cos(pm) * Math.cos(lm);
+      if (nz < 0.05) continue;
+      const dp = (p1 - p0) * 0.07, dl = (l1 - l0) * 0.07;
+      const q = [P(p0 + dp, l0 + dl), P(p0 + dp, l1 - dl), P(p1 - dp, l1 - dl), P(p1 - dp, l0 + dl)];
+      const lit = Math.max(0, nx * L[0] + ny * L[1] + nz * L[2]);
+      let k = Math.pow(lit, 1.5) * 0.9 + (rnd() - 0.5) * 0.28;
+      k = Math.min(1, Math.max(0.03, k)) * Math.pow(nz, 0.35);
+      let col = mix(DARK, LIGHT, k);
+      if (rnd() < 0.2) col = mix(col, TINTS[Math.floor(rnd() * TINTS.length)], 0.55 + 0.35 * lit);
+      if (lit > 0.8 && rnd() < 0.35) col = [255, 255, 255];
+      tiles += `<path d="M${q.map(pt => pt[0].toFixed(1) + ' ' + pt[1].toFixed(1)).join('L')}Z" fill="rgb(${col})"/>`;
+    }
+  }
+  const beamCols = ['#a8f0e0', '#d7d4ff', '#6f34ff'];
+  const beamDefs = beamCols.map((c, i) => `<radialGradient id="pdBeam${i}" gradientUnits="userSpaceOnUse" cx="${cx}" cy="${cy}" r="330"><stop offset=".45" stop-color="${c}" stop-opacity=".2"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>`).join('');
+  const beams = [-70, -38, -12, 18, 46, 74, 112, 140, 168, 200].map((deg, i) => {
+    const hw = 2.2 + (i % 3) * 0.5, r = 330, rad = d => (d * Math.PI) / 180;
+    const pt = d => `${(cx + r * Math.cos(rad(d))).toFixed(1)} ${(cy + r * Math.sin(rad(d))).toFixed(1)}`;
+    return `<path d="M${cx} ${cy}L${pt(deg - hw)}L${pt(deg + hw)}Z" fill="url(#pdBeam${i % 3})"/>`;
+  }).join('');
+  const star = (x, y, r, c) => `<path d="M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z" fill="${c}"/>`;
+  const stars = star(62, 130, 12, '#a8f0e0') + star(352, 92, 16, '#fff') + star(378, 300, 9, '#ff5cc8')
+    + star(40, 372, 13, '#fff') + star(336, 418, 10, '#a8f0e0') + star(118, 44, 8, '#d7d4ff') + star(300, 200, 6, '#fff');
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" focusable="false" style="overflow:visible">
+    <defs>${beamDefs}<radialGradient id="pdGlow"><stop offset="0" stop-color="#6f34ff" stop-opacity=".6"/><stop offset=".6" stop-color="#6f34ff" stop-opacity=".14"/><stop offset="1" stop-color="#6f34ff" stop-opacity="0"/></radialGradient></defs>
+    <circle cx="${cx}" cy="${cy}" r="${R + 95}" fill="url(#pdGlow)"/>
+    ${beams}
+    <line x1="${cx}" y1="0" x2="${cx}" y2="${cy - R + 6}" stroke="#d7d4ff" stroke-opacity=".45" stroke-width="2"/>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="#0a0618"/>
+    ${tiles}
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#d7d4ff" stroke-opacity=".28" stroke-width="1.5"/>
+    <rect x="${cx - 13}" y="${cy - R - 9}" width="26" height="15" rx="6" fill="#d7d4ff" fill-opacity=".9"/>
+    ${stars}
+  </svg>`;
+}
+
+/* ================= Arranque ================= */
+fillSelect($('#zona'), ZONAS, 'Todas las zonas');
+fillSelect($('#f-zona'), ZONAS, 'Elegí una zona');
+fillSelect($('#f-cat'), CATS.map(c => ({ value: c.id, label: `${c.emoji} ${c.id}` })), 'Elegí un tipo');
+
+$('#zona').addEventListener('change', e => { state.zona = e.target.value; renderAll(); });
+$('#q').addEventListener('input', e => { state.q = e.target.value; renderAll(); });
+$('#addBtn').addEventListener('click', openForm);
+$('#fabBtn').addEventListener('click', openForm);
+$('#prevM').addEventListener('click', () => { const v = state.view; state.view = v.m === 0 ? { y: v.y - 1, m: 11 } : { y: v.y, m: v.m - 1 }; renderCalendar(); });
+$('#nextM').addEventListener('click', () => { const v = state.view; state.view = v.m === 11 ? { y: v.y + 1, m: 0 } : { y: v.y, m: v.m + 1 }; renderCalendar(); });
+const shareMsg = 'https://wa.me/?text=' + encodeURIComponent(`🎉 Programas Divertidos: el calendario de planes de CABA y GBA. Mirá qué hay y cargá el tuyo: ${siteUrl()}`);
+$('#shareSite').href = shareMsg;
+$('#shareTop').href = shareMsg;
+$('#heroArt').innerHTML = discoBallSVG();
+$('#quip').textContent = QUIPS[Math.floor(Math.random() * QUIPS.length)];
+
+// En el celu, el botón flotante aparece cuando el botón principal ya quedó fuera de pantalla
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(([en]) => $('#fabBtn').classList.toggle('show', !en.isIntersecting)).observe($('#addBtn'));
+} else { $('#fabBtn').classList.add('show'); }
+
+if (!DEMO) {
+  const cached = store.get('pd_cache', null);
+  if (Array.isArray(cached)) { state.events = cached; state.loaded = true; }
+}
+renderAll();
+loadEvents();
+setInterval(() => { if (!document.hidden) loadEvents(); }, CFG.REFRESH_MS);
+let rz; let lastW = window.innerWidth;
+window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { if (window.innerWidth !== lastW) { lastW = window.innerWidth; renderTicker(); } }, 300); });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) loadEvents(); });
+})();
+</script>
+</body>
+</html>
