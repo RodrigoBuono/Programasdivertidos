@@ -13,22 +13,22 @@ window.PD_EVENTS = [
     "descripcion": "Un día en una isla del Delta para bajar el ruido y desconectar: yoga, respiración, cristales, ecstatic dance y sunset, de 11 a 19 hs. Sin alcohol. Full Experience $60.000 (incluye lancha, comida/bebida y todas las actividades); $45.000 con traslado ida y vuelta. Lanchas 11:30 y 12:30 (la de 10:30 agotada). Últimos cupos.",
     "link": "https://www.instagram.com/eco.armonic/",
     "organizador": "Eco Armonic",
-    "flyer": "",
+    "flyer": "eco-armonic-volver.jpg",
     "origen": "chat"
   },
   {
     "id": "linea-caliente-primavera-2026-09-19",
-    "titulo": "Festival de primavera de Línea Caliente y La Nube",
+    "titulo": "Línea Caliente en La Nube: Festival de Primavera",
     "fecha": "2026-09-19",
     "hora": "16:00",
-    "lugar": "Costanera (lugar exacto a confirmar)",
+    "lugar": "La Nube, Costanera",
     "zona": "CABA",
     "categoria": "Fiesta y música",
     "precio": "",
-    "descripcion": "Festejo de la primavera con Línea Caliente y La Nube, de 16 a 04 hs, en la Costanera. Código de descuento: CALIENTECALIENTE.",
+    "descripcion": "Festival de primavera con horario extendido, de 16 a 04 hs. Line-up: Alot, Pabels, Stump Valley, Juna, Balaciano, Nebula Estudio, Slot, Harari, KSSLR y Tres. Código de descuento: CALIENTECALIENTE.",
     "link": "",
     "organizador": "Línea Caliente y La Nube",
-    "flyer": "",
+    "flyer": "linea-caliente-la-nube.jpg",
     "origen": "chat"
   },
   {
@@ -107,6 +107,21 @@ window.PD_EVENTS = [
     "origen": "chat"
   },
   {
+    "id": "circulo-de-cacao-nunez-2026-09-20",
+    "titulo": "Círculo de cacao: ritual del equinoccio de primavera",
+    "fecha": "2026-09-20",
+    "hora": "",
+    "lugar": "Núñez (dirección a consultar con la organizadora)",
+    "zona": "CABA",
+    "categoria": "Taller y comunidad",
+    "precio": "A la gorra",
+    "descripcion": "Círculo de cacao y ceremonial maya para recibir la primavera. Ritual del equinoccio. A la gorra. El contacto para consultas y la dirección figuran en el flyer.",
+    "link": "",
+    "organizador": "Nathaji Holística y Minesve",
+    "flyer": "circulo-de-cacao.jpg",
+    "origen": "chat"
+  },
+  {
     "id": "vuelan-las-sisters-2026-09-25",
     "titulo": "Vuelan las Sisters",
     "fecha": "2026-09-25",
@@ -118,7 +133,7 @@ window.PD_EVENTS = [
     "descripcion": "Fecha de Vuelan las Blussas y Sisters Triangla, hecha por y para mujeres, personas trans y no binaries. Empieza con un conversatorio y sigue con una electrojam de luxe (Luz Electra, Persefone Dai, Van Shake, Ani Soul, Juana Ines Cortafierros, Maia Koenig, Viejalok y más). Cierra La Brianne. Feria, masajes y tarot. Capacidad limitada.",
     "link": "",
     "organizador": "Vuelan las Blussas y Sisters Triangla",
-    "flyer": "",
+    "flyer": "vuelan-las-sisters.jpg",
     "origen": "chat"
   },
   {
@@ -129,8 +144,8 @@ window.PD_EVENTS = [
     "lugar": "Casa Kumo, Av. Juan B. Justo 807",
     "zona": "CABA",
     "categoria": "Feria y mercado",
-    "precio": "Desde $5.000",
-    "descripcion": "Una selección de todo lo que nos gusta, en la terraza de Casa: ropa, accesorios, arte, tragos, café, música, tattoos y amigos al solcito. De 15 a 19 hs. Con la entrada, 2x1 en vermú.",
+    "precio": "$5.000",
+    "descripcion": "Una selección de todo lo que nos gusta, en la terraza de Casa: mobiliario, joyería, accesorios, fotografía, tattoos, ropa, café, parrilla y vermú, con DJ. Con Agujero Mob, Studio Jotade, Amalia Handcraft, Paloma Montagne, Lu Rosso, Cougar_tv, Foca, Asado Campero, Alfonsina y Micu JS. De 15 a 19 hs. Con la entrada, 2x1 en vermú. Acceso por escalera.",
     "link": "https://enter.ar/eventos/casa-kumo-the-gallery-2",
     "organizador": "Casa Kumo",
     "flyer": "casa-kumo-the-gallery.jpg",

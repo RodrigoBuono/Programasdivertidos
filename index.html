@@ -14,20 +14,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- ============================================================
-     CONFIGURACIÓN: es lo único que tenés que tocar.
-     Pegá entre las comillas la URL que te da Google Apps Script
-     (termina en /exec). Mientras esté vacía, la web muestra los
-     eventos de eventos.js y lo que cargue cada persona se guarda
-     solo en su propio navegador.
+     CONEXIÓN CON GOOGLE (ya configurada): esta es la URL de la planilla
+     que hace de base de datos. Si algún día la cambiás, pegá acá la
+     nueva (termina en /exec). Si la dejás vacía, la web vuelve a leer
+     eventos.js y lo que cargue cada persona queda solo en su navegador.
      ============================================================ -->
 <script>
   window.PD_CONFIG = {
-    API_URL: ""
+    API_URL: "https://script.google.com/macros/s/AKfycbxoHJGozVTDmzwVyn86CFzdM9cTW5BRCf-qGuG4ie6MHdQ2xaHQefwyWU1uFIvzrj1r1A/exec"
   };
 </script>
 
 <!-- Base de datos de eventos (editá eventos.js para sumar o corregir programas) -->
 <script src="eventos.js"></script>
+<!-- Ubicación de las caras en cada flyer: la web recorta alrededor de ellas -->
+<script src="caras.js"></script>
 
 <style>
   :root{
@@ -746,6 +747,30 @@ function renderChips() {
   CATS.forEach(c => box.append(mk(c.id, `${c.emoji} ${c.id}`, c.color)));
 }
 
+// Cómo mostrar un flyer dentro de un marco de proporción A (ancho / alto). Sirve para cualquier sección de la web.
+//  - Si conocemos dónde están las caras: recorta centrado en ellas (con aire arriba para el pelo) y, si no entran, muestra el flyer entero.
+//  - Si no hay datos (flyers de texto, o subidos por la gente): solo recorta si ya es casi cuadrado; si no, lo muestra entero.
+const FACES = window.PD_FACES || {};
+const baseName = u => String(u).split('?')[0].split('/').pop();
+function framing(img, A) {
+  const w = img.naturalWidth, h = img.naturalHeight, r = w / h;
+  const box = FACES[baseName(img.getAttribute('src') || '')];
+  if (box && box.length === 4) {
+    const fw = (box[2] - box[0]) * w, fh = (box[3] - box[1]) * h;
+    const x0 = Math.max(0, box[0] * w - fw * 0.25), x1 = Math.min(w, box[2] * w + fw * 0.25);   // aire a los costados
+    const y0 = Math.max(0, box[1] * h - fh * 0.7),  y1 = Math.min(h, box[3] * h + fh * 0.25);   // aire arriba (pelo, capucha) y abajo
+    const winW = r > A ? h * A : w, winH = r > A ? h : w / A;                                   // parte visible del recorte
+    if (x1 - x0 <= winW + 0.5 && y1 - y0 <= winH + 0.5) {
+      const clamp = v => Math.min(1, Math.max(0, v));
+      const px = w > winW ? clamp(((x0 + x1) / 2 - winW / 2) / (w - winW)) * 100 : 50;
+      const py = h > winH ? clamp(((y0 + y1) / 2 - winH / 2) / (h - winH)) * 100 : 50;
+      return { mode: 'cover', pos: px.toFixed(1) + '% ' + py.toFixed(1) + '%' };
+    }
+    return { mode: 'fit' };
+  }
+  return (r > 0.92 && r < 1.09) ? { mode: 'cover', pos: '50% 50%' } : { mode: 'fit' };
+}
+
 function posterBlock(ev, cat) {
   const d = parseYmd(ev.fecha);
   const wrap = h('div', { class: 'pw' });
@@ -756,11 +781,11 @@ function posterBlock(ev, cat) {
     const img = h('img', { src: ev.flyer, alt: `Flyer de ${ev.titulo}`, loading: 'lazy', referrerpolicy: 'no-referrer' });
     const btn = h('button', { class: 'poster', type: 'button', 'aria-label': `Ver el flyer de ${ev.titulo} en grande`, onclick: () => openLightbox(ev) }, img);
     img.addEventListener('load', () => {
-      const r = img.naturalWidth / img.naturalHeight;
-      if (r < 0.85 || r > 1.25) {   // flyer apaisado o muy vertical: se ve entero sobre su propio fondo desenfocado
+      const f = framing(img, 1);   // el marco de la tarjeta es cuadrado
+      if (f.mode === 'fit') {      // se ve entero sobre su propio fondo desenfocado
         btn.classList.add('fit');
         btn.style.setProperty('--bg', `url("${ev.flyer.replace(/"/g, '%22')}")`);
-      }
+      } else img.style.objectPosition = f.pos;
     });
     img.addEventListener('error', () => { btn.replaceWith(placeholder()); });
     wrap.append(btn);
